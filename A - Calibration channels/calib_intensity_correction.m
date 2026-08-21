@@ -1,0 +1,94 @@
+function calib_intensity_correction(file_calib_int,path_calib_int,N_channels);
+
+% Experimental acquisition for calibration: white light, nb_fr for each
+% wavelength, arbitrary number of wavelength. 
+% Input: path_calib_int & file_calib_int folder and file of the calibration image
+% Output: Intensity correction matrix (I/Imax for each channel).
+%       channel order is [0°/-dz; 45°; 0°/+dz; 90°/-dz; 135°; 90°/+dz]; 
+%
+% Louise Régnier; written 09/11/2023
+
+% choice of filter used for the calibration as part of the tutorial data.
+% To enable manual choice, uncoimment lines 16-16
+indx = 3;
+list = {'513/7','525/40','617/73','676/37','700/90'};
+% [indx,tf] = listdlg('PromptString',{'Select wavelength channels used for this calibration',...
+%     'Multiple selection possible (ctrl+click)',''},'ListString',list);
+list_wavelength = list(indx);
+nb_wl = size(indx,2);
+channel_order = [1 3 5 2 4 6];
+clear I I_corr_factor Areas Area_bkg
+for wl=1:nb_wl
+    I{wl} = zeros(N_channels,1);
+    I_corr_factor{wl} = zeros(N_channels,1);
+    Areas{wl} = zeros(N_channels,4); %Position of all rectangles
+    Area_bkg{wl} = zeros(1,4);
+end
+
+
+
+    
+   fullfile = [path_calib_int file_calib_int];
+   if isfile(fullfile)
+   info=imfinfo(fullfile);
+   nb_fr = size(info,1);
+   nb_fr_per_ch = nb_fr/nb_wl;
+   
+   for wl = 1:nb_wl % loop over the wavelength (filters)
+       im = zeros(info(1).Width,info(1).Height,nb_fr_per_ch);
+       
+       for fr = 1:nb_fr_per_ch % get the image for the wavelength selected
+           im(:,:,fr) = imread(fullfile,'Index',(wl-1)*nb_fr_per_ch+fr);
+       end
+       
+       im_avg = mean(im,3);
+       
+           figure(4534503); imagesc(im_avg); colormap gray; axis equal; axis image;
+         % msgbox({['Select the rectangle n°1 (create the rectangle - then double-click)'],['Channel order: '],['1 = 0°(-dz)'],['2 = 90°(-dz)'],['3 = 45°'],['4 = 135°'],['5 = 0°(+dz)'],['6 = 90°(+dz)']},'Area selection','modal')
+
+           % roi = drawrectangle(); wait(roi);
+           % Areas{wl}(1,:)= round(roi.Position);
+            Areas{wl} =  [ 43    80    92   139;  47   304    92   139; 213    78    92   139; ...
+                214   297    92   139;   379    81    92   139;    379   303    92   139];
+           for i_channel = 1:N_channels
+               % msgbox(['Select the rectangle n°' num2str(i_channel) ' (drag the rectangle - then double-clik)'],'Hi','modal')
+               % wait(roi);
+               % Areas{wl}(i_channel,:)= round(roi.Position);
+               rectangle('Position',Areas{wl}(i_channel,:),'EdgeColor','blue','SelectionHighlight','on');
+           end
+           % msgbox(['Select the area for background estimation'],'Hi','modal')
+           % answer_bckg = questdlg('Select the area for background estimation','please answer','Manually', 'Automatically','Automatically');
+           % switch answer_bckg
+               % case 'Manually'
+           % roi = drawrectangle(); wait(roi);
+               % case 'Automatically'
+           
+                   roi.Position = [0.5 0.5 11 43]; rectangle('Position',roi.Position,'EdgeColor','blue','SelectionHighlight','on');
+                   title({'Intensity calibration','Channel and bgd area selected'})
+           % end
+           Area_bkg{wl} = round(roi.Position);
+           % msgbox(['DONE'],'Hi','modal')
+       
+       for ch=1:N_channels
+           I{wl}(channel_order(ch),1) = mean(im_avg(Areas{wl}(ch,2):Areas{wl}(ch,2)+Areas{wl}(ch,4)-1,Areas{wl}(ch,1):Areas{wl}(ch,1)+Areas{wl}(ch,3))-1,'all')...
+               - mean(im_avg(Area_bkg{wl}(2):Area_bkg{wl}(2)+Area_bkg{wl}(4)-1,Area_bkg{wl}(1):Area_bkg{wl}(1)+Area_bkg{wl}(3)-1),'all');
+       end
+       I_corr_factor{wl} = I{wl} / max(I{wl}); 
+   end
+   
+   else
+       
+        for ch=1:N_channels
+           I{wl}(ch,1) = 0;
+           I_corr_factor{wl}(ch,1) = 0;
+       end
+       
+   end 
+uiwait(msgbox(['Saving intensity correction factors:' newline newline ...
+               '- File: ' file_calib_int(1:end-4) '_intensity_corr_factors.mat' newline ...
+               '- Location: ' path_calib_int newline newline], ...
+              'Saving', 'modal'));
+
+save([path_calib_int file_calib_int(1:end-4) '_intensity_corr_factors.mat'], 'I_corr_factor', 'list_wavelength');
+save([path_calib_int file_calib_int(1:end-4) '_intensity_corr_factors.mat'], 'I_corr_factor','list_wavelength')
+end
