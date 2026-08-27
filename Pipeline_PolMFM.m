@@ -176,6 +176,10 @@ results_all(z_low,[17 18]) = results_all(z_low,[12 15]);
 results_all(z_high,[17 18]) = results_all(z_high,[13 16]);
 results_all(centered_z,[17 18]) = results_all(centered_z,[11 14]);
 
+%offset orientations to match horizontal polarisation to horizontal axis of the camera- microscope dependant
+offset = 60; % orientation offset (can be tuned) [degrees]
+results_all(:,[14 15 16 18]) = 0.5*wrapTo360((results_all(:,[14 15 16 18])+offset)*2); 
+ 
 % save the results 
 if microscope_settings.Photons_convert == 0 
     Results_titles = {'frame' 'x [nm]' 'y [nm]' 'z [nm]' 'intensity [a.u.]' 'bkd[a.u.]' 'resnorm[a.u.]' 'sigmax [nm]' 'sigmay [nm]' 'sigmaz [nm]' 'delta'  'deltaz1' 'deltaz3' 'rho' 'rhoz1' 'rhoz3' 'deltaz' 'rhoz'};
