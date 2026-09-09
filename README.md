@@ -1,5 +1,7 @@
 # Software_PolMFM
 MATLAB software for processing and analysing PolMFM single-molecule orientation and localization microscopy data. 
+The code was tested in matlab R2021a and xxx, on computers running windows 10 and 11. 
+Required tollkits:.... 
 
 A step-by-step tutorial describing the analysis workflow is provided in this repository: Pipeline_PolMFM-tutorial.pdf.
 
