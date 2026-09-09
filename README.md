@@ -28,7 +28,7 @@ The code was tested in matlab R2021a (9.10)
 'Polyspace Bug Finder'	'3.4'
 
 ## Tutorial
-A step-by-step tutorial describing the analysis workflow is provided in this repository: Pipeline_PolMFM-tutorial.pdf.
+A step-by-step tutorial describing the analysis workflow is provided in this repository: **Pipeline_PolMFM-tutorial.pdf**.
 
 ## Data
 Image data should be in Tiff format.
