@@ -6,10 +6,11 @@ MATLAB software for processing and analysing PolMFM single-molecule orientation 
 Windows 10 and 11
 ### System tested
 * Windows 10 with processor Intel(R) Xeon(R) CPU E5-1650 and Graphics Card	NVIDIA GeForce GTX 1630 (4 GB)
-* 
+* Windows 11 with processeur 11th Gen Intel(R) Core(TM) i7-1165G7 (2.80 Ghz) and Graphics Card Intel(R) Iris(R) Xe Graphics (128 Mo)
+* Windows 11 with processor 13th Gen Intel(R) Core(TM) i7-13700 (2.10 GHz) and Graphics Cards NVIDIA GeForce RTX 3050 OEM (8 GB) and Intel(R) UHD Graphics 770 (128 MB)
 
 ### Version
-The code was tested in matlab R2021a (9.10)  
+The code was tested in matlab R2021a (9.10), matlab R2022a (9.12) and matlab R2025b (25.2). 
 
 ### Required tollkits:
 
