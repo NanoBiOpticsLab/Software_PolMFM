@@ -42,5 +42,6 @@ To test the software, you must first download a testing dataset that can be foun
 
 This software includes parts of FISH-quant software, used for prelocalization and 3D Gaussian fitting(Mueller, F., Senecal, A., Tantale, K. et al. FISH-quant: automatic counting of transcripts in 3D FISH images. Nat Methods 10, 277–278 (2013). https://doi.org/10.1038/nmeth.2406). 
 
-## License and Citation
 
+## License
+This project is licensed under the GPL-3.0 License - see the [LICENSE](LICENSE) file for details.
